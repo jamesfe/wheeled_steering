@@ -5,7 +5,7 @@ from enum import Enum
 import logging
 import coloredlogs
 
-is_pi = False
+is_pi = True
 
 if is_pi:
     from rpi_client.pololu.dual_mc33926_rpi import motors, MAX_SPEED

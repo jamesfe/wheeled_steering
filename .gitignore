@@ -1,2 +1,3 @@
 localenv/
 rpi_env/
+**/__pycache__/
