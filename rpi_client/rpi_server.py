@@ -10,6 +10,7 @@ from tornado.ioloop import IOLoop, PeriodicCallback
 from tornado.web import Application
 
 from rpi_client.http_handlers import MainHandler
+from rpi_client.car_state import CarState
 from rpi_client.websock_handlers import DriverSocketHandler
 
 logger = logging.getLogger('rpi_server')
@@ -21,15 +22,6 @@ log_config = {
     'format': '%(asctime)s,%(msecs)03d - %(levelname)s: %(message)s'
 }
 coloredlogs.install(**log_config)
-
-
-class CarState(object):
-
-    def __init__(self):
-        pass
-
-    def update_physical_state(self):
-        pass
 
 
 class CarServer(Application):
@@ -51,7 +43,7 @@ def main():
         logger.info('Opening HTTP server.')
         http_server = HTTPServer(app)
         http_server.listen(9001, address='127.0.0.1')
-        update_ms = 1000
+        update_ms = 100
         logger.debug('Registering periodic callback. Every {} ms'.format(update_ms))
         i = PeriodicCallback(app.car_state.update_physical_state, update_ms)
         i.start()

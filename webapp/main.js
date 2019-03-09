@@ -14,7 +14,6 @@ class Comms {
       this.socket.addEventListener('open', function (event) {
           console.log('Open for business!');
           setConnected();
-          this.send('Hello Server!');
       });
     console.log('connected');
     }
@@ -46,9 +45,10 @@ function initial_connect() {
 
 
 let messageLog = document.getElementById('messageLog');
-document.addEventListener('keydown', handleKeys);
+document.addEventListener('keydown', handleKeyDown);
+document.addEventListener('keyup', handleKeyUp);
 
-function handleKeys(event) {
+function handleKeyDown(event) {
   if (global_connected) {
     switch (event.key) {
       case ' ':
@@ -65,6 +65,19 @@ function handleKeys(event) {
         break;
       case 'l':
         commo.send({'message': 'right'});
+        break;
+    }
+  }
+}
+
+function handleKeyUp(event) {
+  if (global_connected) {
+    switch (event.key) {
+      case 'j':
+        commo.send({'message': 'straight'});
+        break;
+      case 'l':
+        commo.send({'message': 'straight'});
         break;
     }
   }
