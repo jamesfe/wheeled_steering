@@ -10,7 +10,8 @@ class Comms {
   connect() {
     if (!this.connected) {
       console.log('connecting');
-      this.socket = new WebSocket("ws://127.0.0.1:9001/control_socket");
+      // this.socket = new WebSocket("ws://127.0.0.1:9001/control_socket");
+      this.socket = new WebSocket("ws://192.168.1.37:9001/control_socket");
       this.socket.addEventListener('open', function (event) {
           console.log('Open for business!');
           setConnected();
