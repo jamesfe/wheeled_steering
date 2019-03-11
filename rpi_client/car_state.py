@@ -5,7 +5,7 @@ from enum import Enum
 import logging
 import coloredlogs
 
-is_pi = True
+is_pi = False
 
 if is_pi:
     from rpi_client.pololu.dual_mc33926_rpi import motors, MAX_SPEED
@@ -38,6 +38,10 @@ class CarState(object):
         self.stop()
         self.speed_inc = 10
         self.prev_state = (0, 0)
+
+    def set_delta(self, val):
+        if val < MAX_SPEED and val > -1 * MAX_SPEED:
+            self.turn_delta = val
 
     def faster(self):
         self.left_speed += self.speed_inc

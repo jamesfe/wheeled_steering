@@ -4,7 +4,12 @@
   <tr>
     <td>
       <h1>inputs</h1>
-      <button onClick="initial_connect()">connect</button>
+      <button onClick="initial_connect()">connect</button> <br />
+      <input id="turnDelta" value="20"></input>
+  <select id="targetIp">
+      <option value="127.0.0.1:9001/control_socket">local</option>
+      <option value="192.168.1.37:9001/control_socket">192.1681.37</option>
+  </select>
     </td>
     <td width="70%">
       <div id="messageLog">

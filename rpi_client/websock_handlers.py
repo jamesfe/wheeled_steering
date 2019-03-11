@@ -2,6 +2,7 @@
 
 from tornado.websocket import WebSocketHandler
 import json
+import time
 from rpi_client.car_state import TurnDir
 
 
@@ -12,9 +13,9 @@ class DriverSocketHandler(WebSocketHandler):
 
     def open(self):
         self.application.log.info('New websocket!')
-        pass
 
     def on_message(self, message):
+        self.application.extra_vars['last_message'] = time.time()
         self.application.log.info('Received message: {}'.format(message))
         parsed_msg = json.loads(message)
         if 'message' not in parsed_msg:
@@ -33,6 +34,14 @@ class DriverSocketHandler(WebSocketHandler):
             self.application.car_state.turn_direction = TurnDir.LEFT
         elif action == 'straight':
             self.application.car_state.turn_direction = TurnDir.STRAIGHT
+        elif action == 'set_turn_delta':
+            self.set_car_delta(parsed_msg)
+
+    def set_car_delta(self, msg):
+        if 'value' not in msg:
+            return None
+        else:
+            self.application.car_state
 
     def on_close(self):
         pass

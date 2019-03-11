@@ -33,6 +33,7 @@ class CarServer(Application):
         ]
         self.car_state = CarState()
         self.log = logger
+        self.extra_vars = {}
         super(CarServer, self).__init__(urls, debug=True, autoreload=False)
 
 
@@ -42,9 +43,9 @@ def main():
     try:
         logger.info('Opening HTTP server.')
         http_server = HTTPServer(app)
-        # http_server.listen(9001, address='127.0.0.1')
-        http_server.listen(9001, address='192.168.1.37')
-        update_ms = 100
+        http_server.listen(9001, address='127.0.0.1')
+        # http_server.listen(9001, address='192.168.1.37')
+        update_ms = 1000
         logger.debug('Registering periodic callback. Every {} ms'.format(update_ms))
         i = PeriodicCallback(app.car_state.update_physical_state, update_ms)
         i.start()

@@ -1,19 +1,33 @@
-console.log('hi');
+function debounce(func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};
 
 class Comms {
 
   constructor() {
     this.socket = undefined;
     this.connected = false;
+    this.messages = [];
   }
 
-  connect() {
+  connect(target) {
     if (!this.connected) {
       console.log('connecting');
       // this.socket = new WebSocket("ws://127.0.0.1:9001/control_socket");
-      this.socket = new WebSocket("ws://192.168.1.37:9001/control_socket");
+      this.socket = new WebSocket("ws://" + target);
       this.socket.addEventListener('open', function (event) {
-          console.log('Open for business!');
+          console.log(`Connected to websocket at ${target}`);
           setConnected();
       });
     console.log('connected');
@@ -25,7 +39,11 @@ class Comms {
       this.connect();
     }
     let json_msg = JSON.stringify(message);
-    messageLog.innerHTML = messageLog.innerHTML + "<br>" + json_msg;
+    this.messages.push(json_msg);
+    if (this.messages.length > 20) {
+      this.messages.shift();
+    }
+    messageLog.innerHTML = this.messages.join('<br />');
     console.log('sending message: ' + json_msg);
     this.socket.send(json_msg);
   }
@@ -41,13 +59,15 @@ let setConnected = function() {
 };
 
 function initial_connect() {
-  commo.connect();
+  let target = document.getElementById('targetIp').value;
+  commo.connect(target);
 }
 
 
 let messageLog = document.getElementById('messageLog');
-document.addEventListener('keydown', handleKeyDown);
-document.addEventListener('keyup', handleKeyUp);
+let debounceRate = 100;
+document.addEventListener('keydown', debounce(handleKeyDown, debounceRate));
+document.addEventListener('keyup', debounce(handleKeyUp, debounceRate));
 
 function handleKeyDown(event) {
   if (global_connected) {
